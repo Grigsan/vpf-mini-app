@@ -322,6 +322,12 @@ function renderTask(section, task) {
       button.className = "btn btn-outline";
       button.textContent = option;
       button.addEventListener("click", () => {
+        if (button.disabled) {
+          return;
+        }
+        controls.querySelectorAll("button").forEach((control) => {
+          control.disabled = true;
+        });
         const isCorrect = option === task.answer;
         updateFeedback(container, isCorrect, task.explanation);
         setTimeout(() => updateProgress(section.id, task.id, isCorrect), 200);
@@ -339,6 +345,11 @@ function renderTask(section, task) {
     button.className = "btn";
     button.textContent = "Проверить";
     button.addEventListener("click", () => {
+      if (button.disabled) {
+        return;
+      }
+      input.disabled = true;
+      button.disabled = true;
       const normalized = normalizeAnswer(input.value);
       const isCorrect = task.answers.some(
         (answer) => normalizeAnswer(answer) === normalized
