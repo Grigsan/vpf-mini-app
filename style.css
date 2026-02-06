@@ -175,6 +175,14 @@ h1 {
   background: linear-gradient(180deg, #fff, var(--surface-soft));
   padding: 16px;
   box-shadow: var(--shadow-card);
+  transition: transform var(--anim-fast), box-shadow var(--anim-fast);
+}
+
+.card:hover,
+.progress-item:hover,
+.task:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 28px rgba(66, 92, 165, 0.16);
 }
 
 .card h3,
@@ -353,6 +361,13 @@ button[disabled] {
   background: #fcfdff;
   border-radius: var(--radius-md);
   padding: 14px;
+  transition: transform var(--anim-fast), box-shadow var(--anim-fast), border-color var(--anim-fast);
+}
+
+.exercise-card:hover {
+  transform: translateY(-3px);
+  border-color: #cfdcff;
+  box-shadow: 0 12px 24px rgba(80, 107, 180, 0.15);
 }
 
 .exercise-card h4,
@@ -369,14 +384,100 @@ button[disabled] {
   margin-top: 12px;
 }
 
-.life-grid > .card:nth-child(2) {
-  background: linear-gradient(135deg, #fff7da, #fff0c1);
-  border-color: #ffe08a;
-  box-shadow: 0 10px 24px rgba(229, 181, 58, 0.23);
+.daily-card {
+  background: linear-gradient(135deg, #88a4ff, #7b63ff 48%, #6c52f6);
+  border-color: rgba(255, 255, 255, 0.32);
+  color: #fff;
+  box-shadow: 0 16px 34px rgba(83, 73, 205, 0.35);
 }
 
-.life-grid > .card:nth-child(2) h3::after {
-  content: " ✨";
+.daily-card h3,
+.daily-card .meta,
+.daily-card .exercise-meta,
+.daily-card ol,
+.daily-card .daily-streak {
+  color: #fff;
+}
+
+.daily-headline {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.today-badge {
+  background: rgba(255, 255, 255, 0.22);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.daily-streak {
+  margin: 0;
+  font-size: 0.92rem;
+}
+
+.daily-title {
+  font-size: 1rem;
+  margin-top: 8px;
+}
+
+.daily-steps {
+  margin-bottom: 12px;
+}
+
+.about-card {
+  line-height: 1.75;
+}
+
+.about-lead {
+  margin-top: 8px;
+  margin-bottom: 18px;
+  color: #4f5f8d;
+}
+
+.about-list {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.about-list li {
+  margin-bottom: 10px;
+}
+
+.exercise-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.exercise-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.exercise-icon {
+  font-size: 1.05rem;
+}
+
+.step-toggle {
+  width: fit-content;
+}
+
+.exercise-steps {
+  margin: 10px 0;
+  padding-left: 22px;
+}
+
+.exercise-steps.is-collapsed {
+  display: none;
+}
+
+.btn.btn-success {
+  background: linear-gradient(135deg, #2cc37f, #1ea969);
+  color: #fff;
+  box-shadow: 0 4px 0 #188d58, 0 10px 20px rgba(31, 177, 113, 0.34);
 }
 
 @media (max-width: 760px) {
@@ -409,6 +510,10 @@ button[disabled] {
   .progress-item {
     border-radius: 18px;
     padding: 14px;
+  }
+
+  .exercise-grid {
+    grid-template-columns: 1fr;
   }
 }
 

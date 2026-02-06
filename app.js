@@ -1055,34 +1055,41 @@ function renderLifeSection(section) {
   const wrapper = document.createElement("div");
   wrapper.className = "life-grid";
 
+  const exerciseIcons = ["🎯", "🧩", "🗣️", "✍️", "🔎", "🕒", "💡", "📚"];
+
   const theory = document.createElement("div");
-  theory.className = "card";
+  theory.className = "card about-card";
   theory.innerHTML = `
     <h3>О функции</h3>
-    <p class="meta">${section.shortDescription}</p>
+    <p class="about-lead">${section.shortDescription}</p>
     <h4>Где применяется в жизни</h4>
-    <ul>
+    <ul class="about-list">
       ${section.lifeExamples.map((item) => `<li>${item}</li>`).join("")}
     </ul>
   `;
   wrapper.appendChild(theory);
 
   const daily = document.createElement("div");
-  daily.className = "card";
+  daily.className = "card daily-card";
   const dailyData = getDailyExercise(section.id);
   const dailyExercise =
     dailyData && section.dailyLifeExercises[dailyData.exerciseIndex];
+  const streak = getLifeStreak(section.id);
   daily.innerHTML = `
+    <div class="daily-headline">
+      <span class="pill today-badge">Сегодня</span>
+      <p class="daily-streak">Серия: <strong>${streak}</strong> дней</p>
+    </div>
     <h3>Упражнение дня</h3>
-    <p class="meta">${
+    <p class="meta daily-title">${
       dailyExercise
-        ? `Сегодня: <strong>${dailyExercise.title}</strong>`
+        ? `<strong>${dailyExercise.title}</strong>`
         : "Выберите случайное упражнение на сегодня."
     }</p>
     ${
       dailyExercise
         ? `
-          <ol>
+          <ol class="daily-steps">
             ${dailyExercise.steps.map((step) => `<li>${step}</li>`).join("")}
           </ol>
           <p class="exercise-meta">${dailyExercise.tips ?? ""}</p>
@@ -1091,9 +1098,11 @@ function renderLifeSection(section) {
     }
     <div class="exercise-actions">
       <button class="btn" data-action="daily-random">Случайное упражнение на сегодня</button>
-      <button class="btn btn-outline" data-action="daily-complete" ${
-        dailyData?.completed ? "disabled" : ""
-      }>${dailyData?.completed ? "Отмечено 🎉" : "Отметить выполненным"}</button>
+      <button class="btn ${
+        dailyData?.completed ? "btn-success" : "btn-outline"
+      }" data-action="daily-complete">${
+    dailyData?.completed ? "✅ Выполнено" : "Отметить выполненным"
+  }</button>
     </div>
   `;
   wrapper.appendChild(daily);
@@ -1103,21 +1112,25 @@ function renderLifeSection(section) {
   exercises.innerHTML = `
     <h3>Повседневные упражнения</h3>
     <p class="meta">Небольшие идеи, которые можно делать без специальной подготовки.</p>
-    <div class="life-grid">
+    <div class="exercise-grid">
       ${section.dailyLifeExercises
         .map((exercise, index) => {
           const completed = isExerciseCompleted(section.id, index);
+          const icon = exerciseIcons[index % exerciseIcons.length];
           return `
           <div class="exercise-card">
-            <h4>${exercise.title}</h4>
-            <ol>
+            <h4 class="exercise-title"><span class="exercise-icon" aria-hidden="true">${icon}</span>${exercise.title}</h4>
+            <button class="btn btn-outline step-toggle" data-action="toggle-steps" data-index="${index}" aria-expanded="false">Показать шаги</button>
+            <ol class="exercise-steps is-collapsed" data-steps-index="${index}">
               ${exercise.steps.map((step) => `<li>${step}</li>`).join("")}
             </ol>
             <p class="exercise-meta">${exercise.tips ?? ""}</p>
             <div class="exercise-actions">
-              <button class="btn btn-outline" data-action="exercise-complete" data-index="${index}" ${
-                completed ? "disabled" : ""
-              }>${completed ? "Выполнено сегодня ✅" : "Отметить выполненным"}</button>
+              <button class="btn ${
+                completed ? "btn-success" : "btn-outline"
+              }" data-action="exercise-complete" data-index="${index}">${
+            completed ? "✅ Выполнено" : "Отметить выполненным"
+          }</button>
             </div>
           </div>
         `;
@@ -1138,15 +1151,31 @@ function renderLifeSection(section) {
   wrapper.querySelector('[data-action="daily-complete"]').addEventListener(
     "click",
     () => {
+      if (dailyData?.completed) {
+        return;
+      }
       markDailyCompleted(section.id);
       renderApp();
     }
   );
 
+  wrapper.querySelectorAll('[data-action="toggle-steps"]').forEach((button) => {
+    button.addEventListener("click", (event) => {
+      const index = Number(event.currentTarget.dataset.index);
+      const steps = wrapper.querySelector(`[data-steps-index="${index}"]`);
+      const collapsed = steps.classList.toggle("is-collapsed");
+      event.currentTarget.textContent = collapsed ? "Показать шаги" : "Скрыть шаги";
+      event.currentTarget.setAttribute("aria-expanded", String(!collapsed));
+    });
+  });
+
   wrapper.querySelectorAll('[data-action="exercise-complete"]').forEach(
     (button) => {
       button.addEventListener("click", (event) => {
         const index = Number(event.currentTarget.dataset.index);
+        if (isExerciseCompleted(section.id, index)) {
+          return;
+        }
         markExerciseCompleted(section.id, index);
         renderApp();
       });
