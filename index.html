@@ -7,8 +7,20 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>ВПФ тренажёр</h1>
-  <div id="app"></div>
+  <div class="page">
+    <header class="header">
+      <div>
+        <h1>Тренажёр ВПФ</h1>
+        <p class="subtitle">Безопасные короткие упражнения для тренировки внимания, памяти и самоконтроля.</p>
+      </div>
+      <div class="header-actions">
+        <button id="reset-progress" class="btn btn-outline">Начать заново</button>
+      </div>
+    </header>
+
+    <nav id="nav" class="nav"></nav>
+    <main id="app" class="content"></main>
+  </div>
 
   <script src="app.js"></script>
 </body>
