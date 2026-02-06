@@ -323,8 +323,8 @@ function renderTask(section, task) {
       button.textContent = option;
       button.addEventListener("click", () => {
         const isCorrect = option === task.answer;
-        updateProgress(section.id, task.id, isCorrect);
         updateFeedback(container, isCorrect, task.explanation);
+        setTimeout(() => updateProgress(section.id, task.id, isCorrect), 200);
       });
       controls.appendChild(button);
     });
@@ -343,8 +343,8 @@ function renderTask(section, task) {
       const isCorrect = task.answers.some(
         (answer) => normalizeAnswer(answer) === normalized
       );
-      updateProgress(section.id, task.id, isCorrect);
       updateFeedback(container, isCorrect, task.explanation);
+      setTimeout(() => updateProgress(section.id, task.id, isCorrect), 200);
     });
     controls.appendChild(input);
     controls.appendChild(button);
